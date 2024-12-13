@@ -6,13 +6,14 @@ import hashlib
 import RPi.GPIO as GPIO
 from datetime import datetime
 
-# GPIO Pin Setup
-ENTRY_BUTTON_PIN = 17
-EXIT_BUTTON_PIN = 27
-ACCESS_GRANTED_LED_PIN = 22
-NOT_AUTHORISED_LED_PIN = 23
+# GPIO Pin Setup (Physical Board Pins)
+ENTRY_BUTTON_PIN = 11  # Physical pin 11 (GPIO17)
+EXIT_BUTTON_PIN = 13   # Physical pin 13 (GPIO27)
+ACCESS_GRANTED_LED_PIN = 15  # Physical pin 15 (GPIO22)
+NOT_AUTHORISED_LED_PIN = 16  # Physical pin 16 (GPIO23)
 
-GPIO.setmode(GPIO.BCM)
+# Setup GPIO mode and pin configuration
+GPIO.setmode(GPIO.BOARD)
 GPIO.setup(ENTRY_BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(EXIT_BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(ACCESS_GRANTED_LED_PIN, GPIO.OUT)
@@ -92,14 +93,15 @@ def monitor_buttons():
     """Monitor buttons and call corresponding functions."""
     try:
         while True:
-            if not GPIO.input(ENTRY_BUTTON_PIN):  # Button pressed
+            if GPIO.input(ENTRY_BUTTON_PIN) == GPIO.LOW:  # Button pressed
                 entry()
                 time.sleep(0.5)  # Debounce
-            if not GPIO.input(EXIT_BUTTON_PIN):  # Button pressed
+            if GPIO.input(EXIT_BUTTON_PIN) == GPIO.LOW:  # Button pressed
                 exit()
                 time.sleep(0.5)  # Debounce
     except KeyboardInterrupt:
         GPIO.cleanup()
 
 if __name__ == "__main__":
+    print("System ready. Waiting for button presses...")
     monitor_buttons()
