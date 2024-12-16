@@ -8,7 +8,9 @@ import busio
 i2c = busio.I2C(board.SCL, board.SDA)
 
 # LCD 1602 setup (adjust the address if necessary)
-lcd = character_lcd.Character_LCD_I2C(i2c, 16, 2)  # 16x2 LCD
+lcd = CharLCD(i2c_expander='PCF8574', address=0x2d, port=1, cols=16, rows=2, dotsize=8)
+lcd.clear()
+
 
 # Clear the LCD screen
 lcd.clear()
