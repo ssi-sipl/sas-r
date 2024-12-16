@@ -1,7 +1,7 @@
 from RPLCD.i2c import CharLCD
 
 # Replace 0x27 with your I2C address
-I2C_ADDRESS = 0x27
+I2C_ADDRESS = 0x2d
 lcd = CharLCD('PCF8574', I2C_ADDRESS)
 
 def main():
