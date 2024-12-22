@@ -10,8 +10,8 @@ NOT_AUTHORISED_LED_PIN = 16  # Physical pin 16 (GPIO23)
 
 # Backend API Configuration
 BACKEND_BASE_URL = "https://attendance-system-backend-ptbf.onrender.com/api"  # Replace with your backend base URL
-ENTRY_ENDPOINT = f"{https://attendance-system-backend-ptbf.onrender.com/api}/entry"
-EXIT_ENDPOINT = f"{https://attendance-system-backend-ptbf.onrender.com/api}/exit"
+ENTRY_ENDPOINT = f"{https://attendance-system-backend-ptbf.onrender.com/api/logs/entry}/entry"
+EXIT_ENDPOINT = f"{https://attendance-system-backend-ptbf.onrender.com/api/logs/exit}/exit"
 
 # Setup GPIO mode and pin configuration
 GPIO.setmode(GPIO.BOARD)
