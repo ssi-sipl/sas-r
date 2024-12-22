@@ -2,6 +2,7 @@ import time
 import serial
 import adafruit_fingerprint
 import pandas as pd
+import requests  # For making POST requests
 
 # Setup serial connection for the fingerprint sensor
 uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
@@ -14,6 +15,9 @@ try:
     df = pd.read_csv(csv_file)
 except FileNotFoundError:
     df = pd.DataFrame(columns=['id', 'name'])
+
+# Backend API endpoint
+ENROLL_ENDPOINT = "https://attendance-system-8470.postman.co/workspace/Attendance-System-Backend~a6e0925f-99bb-45d2-838f-64977fd88571/request/40513467-fde8ce5c-df36-4887-be62-0ae19f6a55ea?action=share&source=copy-link&creator=40562558&active-environment=48dce463-a929-4641-9380-eca05a8c257f"  # Replace with your actual backend URL
 
 def wait_and_prompt():
     """Display wait and ready prompts with a 2-second delay."""
@@ -52,6 +56,23 @@ def enroll_fingerprint():
         new_entry = pd.DataFrame({'id': [int(finger_id)], 'name': [finger_name]})
         df = pd.concat([df, new_entry], ignore_index=True)
         df.to_csv(csv_file, index=False)
+
+        # Send a POST request to the backend
+        try:
+            payload = {
+                "first_name": finger_name.split()[0],  # Assuming first name is the first word
+                "last_name": " ".join(finger_name.split()[1:]),  # Remaining words as last name
+                "fingerprint_id": int(finger_id)
+            }
+            response = requests.post(ENROLL_ENDPOINT, json=payload)
+            if response.status_code == 200:
+                print("Enrollment data successfully sent to the backend.")
+                print("Backend Response:", response.json())
+            else:
+                print("Failed to send data to the backend.")
+                print("Backend Response:", response.text)
+        except requests.RequestException as e:
+            print(f"Error sending data to backend: {e}")
     else:
         print("Failed to store fingerprint on the sensor.")
 
@@ -69,6 +90,7 @@ def search_fingerprint():
         record = df[df['id'] == finger_id]
         if not record.empty:
             print(f"Name: {record.iloc[0]['name']}")
+            print(f"Raw Data: {record.iloc[0]['raw_data']}")
         else:
             print("No name associated with this fingerprint.")
     else:
@@ -80,7 +102,7 @@ def view_all_fingerprints():
         print("No fingerprints enrolled.")
     else:
         print("All Enrolled Fingerprints:")
-        print(df)
+        print(df[['id', 'name', 'raw_data']])
 
 def delete_fingerprint():
     """Delete a fingerprint by ID."""
