@@ -6,9 +6,6 @@ import serial
 from digitalio import DigitalInOut, Direction
 import adafruit_fingerprint
 
-led = DigitalInOut(board.D13)
-led.direction = Direction.OUTPUT
-
 # If using with a computer such as Linux/RaspberryPi, Mac, Windows with USB/serial converter:
 uart = serial.Serial("/dev/ttyUSB0", baudrate=57600, timeout=1)
 
