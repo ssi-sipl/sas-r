@@ -3,18 +3,25 @@ import serial
 import adafruit_fingerprint
 import pandas as pd
 import hashlib
+from datetime import datetime
 
 # Setup serial connection for the fingerprint sensor
 uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
-# Load fingerprint database from CSV or create an empty one
-csv_file = 'fingerprint_data.csv'
+# Load fingerprint metadata database or create an empty one
+metadata_csv = 'fingerprint_data.csv'
+raw_data_csv = 'fingerprint_raw_data.csv'
 
 try:
-    df = pd.read_csv(csv_file)
+    metadata_df = pd.read_csv(metadata_csv)
 except FileNotFoundError:
-    df = pd.DataFrame(columns=['id', 'name', 'sha_key'])
+    metadata_df = pd.DataFrame(columns=['id', 'name', 'sha_key'])
+
+try:
+    raw_data_df = pd.read_csv(raw_data_csv)
+except FileNotFoundError:
+    raw_data_df = pd.DataFrame(columns=['timestamp', 'operation', 'finger_id', 'raw_data'])
 
 def wait_and_prompt():
     """Display wait and ready prompts with a 2-second delay."""
@@ -22,14 +29,26 @@ def wait_and_prompt():
     time.sleep(2)  # Wait for 2 seconds
     print("Ready for scanning.")
 
-# def generate_sha_key(data):
-#     """Generate a SHA-256 hash for the provided data."""
-#     return hashlib.sha256(data.encode()).hexdigest()
+def generate_sha_key(data):
+    """Generate a SHA-256 hash for the provided data."""
+    return hashlib.sha256(data.encode()).hexdigest()
 
-def display_fingerprint_raw_data(data):
-    """Display raw fingerprint data."""
+def display_and_save_fingerprint_raw_data(data, operation, finger_id=None):
+    """Display and save raw fingerprint data."""
     print("Raw Fingerprint Data:")
     print(data)
+    
+    # Save raw fingerprint data to CSV
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    new_raw_entry = pd.DataFrame({
+        'timestamp': [timestamp],
+        'operation': [operation],
+        'finger_id': [finger_id if finger_id is not None else "N/A"],
+        'raw_data': [data]
+    })
+    global raw_data_df
+    raw_data_df = pd.concat([raw_data_df, new_raw_entry], ignore_index=True)
+    raw_data_df.to_csv(raw_data_csv, index=False)
 
 def enroll_fingerprint():
     """Enroll a new fingerprint and associate it with a name."""
@@ -41,8 +60,9 @@ def enroll_fingerprint():
         if finger.image_2_tz(1) != adafruit_fingerprint.OK:
             print("Failed to process fingerprint. Try again.")
             continue
-        # Display raw fingerprint data
-        display_fingerprint_raw_data(finger.get_fpdata(sensorbuffer="image"))
+        # Display and save raw fingerprint data
+        raw_data = finger.get_fpdata(sensorbuffer="image")
+        display_and_save_fingerprint_raw_data(raw_data, "enroll")
         if finger.store_model(1) != adafruit_fingerprint.OK:
             print("Failed to store fingerprint. Try again.")
             continue
@@ -60,11 +80,11 @@ def enroll_fingerprint():
     sha_key = generate_sha_key(f"{finger_id}{finger_name}")
     if finger.store_model(int(finger_id)) == adafruit_fingerprint.OK:
         print(f"Fingerprint enrolled successfully with ID {finger_id}.")
-        global df
+        global metadata_df
         # Use pd.concat() to add a new row to the dataframe
         new_entry = pd.DataFrame({'id': [int(finger_id)], 'name': [finger_name], 'sha_key': [sha_key]})
-        df = pd.concat([df, new_entry], ignore_index=True)
-        df.to_csv(csv_file, index=False)
+        metadata_df = pd.concat([metadata_df, new_entry], ignore_index=True)
+        metadata_df.to_csv(metadata_csv, index=False)
     else:
         print("Failed to store fingerprint on the sensor.")
 
@@ -76,12 +96,13 @@ def search_fingerprint():
     if finger.image_2_tz(1) != adafruit_fingerprint.OK:
         print("Failed to process fingerprint.")
         return
-    # Display raw fingerprint data
-    display_fingerprint_raw_data(finger.get_fpdata(sensorbuffer="image"))
+    # Display and save raw fingerprint data
+    raw_data = finger.get_fpdata(sensorbuffer="image")
+    display_and_save_fingerprint_raw_data(raw_data, "search")
     if finger.finger_search() == adafruit_fingerprint.OK:
         finger_id = finger.finger_id
         print(f"Fingerprint found! ID: {finger_id}")
-        record = df[df['id'] == finger_id]
+        record = metadata_df[metadata_df['id'] == finger_id]
         if not record.empty:
             print(f"Name: {record.iloc[0]['name']}")
             print(f"SHA Key: {record.iloc[0]['sha_key']}")
@@ -92,11 +113,11 @@ def search_fingerprint():
 
 def view_all_fingerprints():
     """View all enrolled fingerprints."""
-    if df.empty:
+    if metadata_df.empty:
         print("No fingerprints enrolled.")
     else:
         print("All Enrolled Fingerprints:")
-        print(df)
+        print(metadata_df)
 
 def delete_fingerprint():
     """Delete a fingerprint by ID."""
@@ -104,9 +125,9 @@ def delete_fingerprint():
         finger_id = int(input("Enter the ID of the fingerprint to delete: "))
         if finger.delete_model(finger_id) == adafruit_fingerprint.OK:
             print(f"Fingerprint with ID {finger_id} deleted successfully.")
-            global df
-            df = df[df['id'] != finger_id]
-            df.to_csv(csv_file, index=False)
+            global metadata_df
+            metadata_df = metadata_df[metadata_df['id'] != finger_id]
+            metadata_df.to_csv(metadata_csv, index=False)
         else:
             print("Failed to delete fingerprint.")
     except ValueError:
