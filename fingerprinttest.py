@@ -2,28 +2,22 @@
 # SPDX-License-Identifier: MIT
 
 import time
-import board
-import busio
+import serial
 from digitalio import DigitalInOut, Direction
 import adafruit_fingerprint
 
 led = DigitalInOut(board.D13)
 led.direction = Direction.OUTPUT
 
-uart = busio.UART(board.TX, board.RX, baudrate=57600)
-
-#If using with a computer such as Linux/RaspberryPi, Mac, Windows with USB/serial converter:
-import serial
+# If using with a computer such as Linux/RaspberryPi, Mac, Windows with USB/serial converter:
 uart = serial.Serial("/dev/ttyUSB0", baudrate=57600, timeout=1)
 
 # If using with Linux/Raspberry Pi and hardware UART:
-# import serial
 # uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
 
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 ##################################################
-
 
 def get_fingerprint():
     """Get a finger print image, template it, and see if it matches!"""
@@ -37,7 +31,6 @@ def get_fingerprint():
     if finger.finger_search() != adafruit_fingerprint.OK:
         return False
     return True
-
 
 # pylint: disable=too-many-branches
 def get_fingerprint_detail():
@@ -84,7 +77,6 @@ def get_fingerprint_detail():
         else:
             print("Other error")
         return False
-
 
 # pylint: disable=too-many-statements
 def enroll_finger(location):
@@ -156,9 +148,7 @@ def enroll_finger(location):
 
     return True
 
-
 ##################################################
-
 
 def get_num():
     """Use input() to get a valid number from 1 to 127. Retry till success!"""
@@ -169,7 +159,6 @@ def get_num():
         except ValueError:
             pass
     return i
-
 
 while True:
     print("----------------")
