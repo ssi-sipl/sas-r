@@ -30,6 +30,17 @@ def hash_fingerprint_template(template):
     return sha256_hash
 
 
+def clear_fingerprint_buffer():
+    """
+    Clears the fingerprint sensor buffer slots.
+    """
+    if finger.empty_library() == adafruit_fingerprint.OK:
+        print("Fingerprint buffer cleared successfully.")
+    else:
+        print("Failed to clear fingerprint buffer.")
+
+
+
 def send_post_request(endpoint, data):
     """Send a POST request to the backend."""
     try:
@@ -47,6 +58,11 @@ def send_post_request(endpoint, data):
 
 
 def process_fingerprint():
+    
+    print("Clearing fingerprint buffer...")
+    clear_fingerprint_buffer()  # Clear buffer before starting a new search
+
+    
     """Capture fingerprint, retrieve template, and send to backend."""
     print("Waiting for fingerprint...")
     while finger.get_image() != adafruit_fingerprint.OK:
