@@ -16,8 +16,9 @@ ENROLL_ENDPOINT = "https://attendance-system-backend-ptbf.onrender.com/api/users
 def hash_fingerprint_template(template):
     if not template:
         raise ValueError("Template cannot be empty or None.")
-    template_bytes = bytes (template)
-    sha256_hash = hashlib.sha256(template_bytes).hexdigest()
+    template_bytes = bytes(template)
+    salt = time.time_ns()  # Use current time as salt
+    sha256_hash = hashlib.sha256(template_bytes + str(salt).encode()).hexdigest()
     return sha256_hash
 
 
