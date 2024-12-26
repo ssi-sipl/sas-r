@@ -74,7 +74,7 @@ def enroll_fingerprint():
             print("Enrollment Failed.")
             print("Backend Response:", response.text)
     except requests.RequestException as e:
-        print(f"Error sending data to backend: {e}")
+        print(f"Error sending data to Server: {e}")
 
 
 def main():
