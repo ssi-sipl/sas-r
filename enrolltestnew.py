@@ -27,7 +27,22 @@ def wait_and_prompt():
     print("Ready for scanning.")
 
 
+def clear_fingerprint_buffer():
+    """
+    Clears the fingerprint sensor buffer slots.
+    """
+    if finger.empty_library() == adafruit_fingerprint.OK:
+        print("Fingerprint buffer cleared successfully.")
+    else:
+        print("Failed to clear fingerprint buffer.")
+
+
 def enroll_fingerprint():
+
+    print("Clearing fingerprint buffer...")
+    clear_fingerprint_buffer()  # Clear buffer before starting a new enrollment
+
+    
     print("Put you finger on the sensor to enroll.")
     for _ in range(3):  # Attempt 3 times to get the image
         wait_and_prompt()
