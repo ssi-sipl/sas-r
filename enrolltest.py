@@ -17,7 +17,7 @@ except FileNotFoundError:
     df = pd.DataFrame(columns=['id', 'name'])
 
 # Backend API endpoint
-ENROLL_ENDPOINT = "https://attendance-system-backend-ptbf.onrender.com/api/user/enroll"  # Replace with your actual backend URL
+ENROLL_ENDPOINT = "https://attendance-system-backend-ptbf.onrender.com/api/users/enroll"  # Replace with your actual backend URL
 
 def wait_and_prompt():
     """Display wait and ready prompts with a 2-second delay."""
