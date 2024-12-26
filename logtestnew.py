@@ -70,7 +70,7 @@ def process_fingerprint():
         print(e)
         return
 
-    print("Fingerprint scanned successfully. Sending to backend...")
+    print("Fingerprint scanned successfully. Sending to server...")
 
     data = {"fingerprint_id": hashed_template}
 
