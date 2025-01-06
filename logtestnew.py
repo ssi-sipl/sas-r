@@ -34,7 +34,7 @@ def clear_fingerprint_buffer():
     """
     Clears the fingerprint sensor buffer slots.
     """
-   if finger.empty_library() == adafruit_fingerprint.OK:
+    if finger.empty_library() == adafruit_fingerprint.OK:
         print("Fingerprint buffer cleared successfully.")
     else:
         print("Failed to clear fingerprint buffer.")
