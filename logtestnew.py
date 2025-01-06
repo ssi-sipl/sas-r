@@ -30,14 +30,14 @@ def hash_fingerprint_template(template):
     return sha256_hash
 
 
-def clear_fingerprint_buffer():
+#def clear_fingerprint_buffer():
     """
-    Clears the fingerprint sensor buffer slots.
+#    Clears the fingerprint sensor buffer slots.
     """
-    if finger.empty_library() == adafruit_fingerprint.OK:
-        print("Fingerprint buffer cleared successfully.")
-    else:
-        print("Failed to clear fingerprint buffer.")
+#   if finger.empty_library() == adafruit_fingerprint.OK:
+#        print("Fingerprint buffer cleared successfully.")
+#    else:
+#        print("Failed to clear fingerprint buffer.")
 
 
 
