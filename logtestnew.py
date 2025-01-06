@@ -59,8 +59,8 @@ def send_post_request(endpoint, data):
 
 def process_fingerprint():
     
-    print("Clearing fingerprint buffer...")
-    clear_fingerprint_buffer()  # Clear buffer before starting a new search
+    #print("Clearing fingerprint buffer...")
+    #clear_fingerprint_buffer()  # Clear buffer before starting a new search
 
     
     """Capture fingerprint, retrieve template, and send to backend."""
