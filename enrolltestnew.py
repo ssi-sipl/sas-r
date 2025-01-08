@@ -7,7 +7,7 @@ import uuid
 
 # Setup serial connection for the fingerprint sensor
 uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
-finger = adafruit_fingerprint.AdafruitFingerprint(uart)
+finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 # Backend API endpoint
 # Replace with your actual backend URL
