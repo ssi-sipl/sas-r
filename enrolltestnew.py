@@ -43,7 +43,7 @@ def hash_fingerprint_template(template):
 def enroll_fingerprint():
 
     print("Clearing fingerprint buffer...")
-    #clear_fingerprint_buffer()  # Clear buffer before starting a new enrollment
+    clear_fingerprint_buffer()  # Clear buffer before starting a new enrollment
 
     
     print("Put you finger on the sensor to enroll.")
