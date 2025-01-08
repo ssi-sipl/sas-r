@@ -20,16 +20,14 @@ def wait_and_prompt():
     print("Ready for scanning.")
 
 
-#def clear_fingerprint_buffer():
-#    """
-#    Clears the fingerprint sensor temporary buffer slots (for current scan).
-#    """
-#    # Attempt to clear the current fingerprint data (temporary buffer)
-#    result = finger.empty_finger()  # Clears the buffer temporarily
-#    if result == adafruit_fingerprint.OK:
-#        print("Fingerprint buffer cleared successfully.")
-#    else:
-#        print(f"Failed to clear fingerprint buffer. Error code: {result}")
+def clear_fingerprint_buffer():
+    """
+    Clears the fingerprint sensor buffer slots.
+    """
+    if finger.empty_library() == adafruit_fingerprint.OK:
+        print("Fingerprint buffer cleared successfully.")
+    else:
+        print("Failed to clear fingerprint buffer.")
 
 def hash_fingerprint_template(template):
     if not template:
