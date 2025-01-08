@@ -83,7 +83,7 @@ def process_fingerprint():
         return
 
     try:
-        hashed_template = hash_fingerprint_template(template)
+        hashed_template = hash_fingerprint_template(template,unique_id)
     except ValueError as e:
         print(e)
         return
