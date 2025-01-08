@@ -1,29 +1,18 @@
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
-# SPDX-License-Identifier: MIT
-
 import time
 import board
-import busio
+import serial
 from digitalio import DigitalInOut, Direction
 import adafruit_fingerprint
 
 led = DigitalInOut(board.D13)
 led.direction = Direction.OUTPUT
 
-uart = busio.UART(board.TX, board.RX, baudrate=57600)
-
-# If using with a computer such as Linux/RaspberryPi, Mac, Windows with USB/serial converter:
-# import serial
-# uart = serial.Serial("/dev/ttyUSB0", baudrate=57600, timeout=1)
-
-# If using with Linux/Raspberry Pi and hardware UART:
-# import serial
-# uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
+# Using pyserial instead of busio
+uart = serial.Serial("/dev/ttyUSB0", baudrate=57600, timeout=1)
 
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 ##################################################
-
 
 def get_fingerprint():
     """Get a finger print image, template it, and see if it matches!"""
