@@ -6,7 +6,7 @@ import requests  # For making POST requests
 
 # Setup serial connection for the fingerprint sensor
 uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
-finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
+finger = adafruit_fingerprint.AdafruitFingerprint(uart)
 
 # Load fingerprint database from CSV or create an empty one
 csv_file = 'fingerprint_data.csv'
