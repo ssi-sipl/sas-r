@@ -46,7 +46,7 @@ def enroll_fingerprint():
         print("No available storage slots on sensor.")
         return
 
-    if finger.store_model(finger_id) != adafruit_fingerprint.OK:
+    if finger.store_model(fingerprint_id) != adafruit_fingerprint.OK:
         print("Failed to store fingerprint on sensor.")
         return
 
