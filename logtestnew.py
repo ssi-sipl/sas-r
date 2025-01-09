@@ -37,7 +37,11 @@ def hash_fingerprint_template(template):
         raise ValueError("Template cannot be empty or None.")
     template_bytes = bytes(template)
     sha256_hash = hashlib.sha256(template_bytes).hexdigest()
-    return sha256_hash  # Return only the hash
+
+    #  print the generated hash
+    print(f"Generated SHA-256 Hash: {sha256_hash}")
+    
+    return sha256_hash
 
 def clear_fingerprint_buffer():
     """
