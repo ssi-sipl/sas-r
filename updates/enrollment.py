@@ -41,8 +41,8 @@ def enroll_fingerprint():
         print("Failed to create fingerprint model.")
         return
 
-    finger_id = get_new_finger_id()
-    if finger_id is None:
+    fingerprint_id = get_new_finger_id()
+    if fingerprint_id is None:
         print("No available storage slots on sensor.")
         return
 
@@ -59,7 +59,7 @@ def enroll_fingerprint():
     payload = {
         "first_name": first_name,
         "last_name": last_name,
-        "finger_id": finger_id
+        "fingerprint_id": fingerprint_id
     }
     try:
         response = requests.post(ENROLL_ENDPOINT, json=payload)
