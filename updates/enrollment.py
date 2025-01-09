@@ -64,13 +64,14 @@ def enroll_fingerprint():
         print("Failed to store fingerprint on sensor.")
         return
 
+    print("Fingerprint Id:", fingerprint_id)
+
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
     if not first_name or not last_name:
         print("First name and last name cannot be empty.")
         return
     
-    print("Fingerprint Id:", fingerprint_id)
 
     payload = {
         "first_name": first_name,
