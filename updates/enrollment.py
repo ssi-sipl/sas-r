@@ -69,6 +69,8 @@ def enroll_fingerprint():
     if not first_name or not last_name:
         print("First name and last name cannot be empty.")
         return
+    
+    print("Fingerprint Id:", fingerprint_id)
 
     payload = {
         "first_name": first_name,
