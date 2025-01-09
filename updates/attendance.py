@@ -39,7 +39,7 @@ def process_fingerprint():
     fingerprint_id = finger.finger_id
     print(f"Fingerprint ID {fingerprint_id} recognized.")
 
-    data = {"fingerprint_id": srt(fingerprint_id)}
+    data = {"fingerprint_id": str(fingerprint_id)}
     try:
         response = requests.post(ATTENDANCE_ENDPOINT, json=data)
         if response.status_code == 200:
