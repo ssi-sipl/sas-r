@@ -36,10 +36,10 @@ def process_fingerprint():
         GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.LOW)
         return
 
-    finger_id = finger.finger_id
-    print(f"Fingerprint ID {finger_id} recognized.")
+    fingerprint_id = finger.fingerprint_id
+    print(f"Fingerprint ID {fingerprint_id} recognized.")
 
-    data = {"finger_id": finger_id}
+    data = {"fingerprint_id": fingerprint_id}
     try:
         response = requests.post(ATTENDANCE_ENDPOINT, json=data)
         if response.status_code == 200:
