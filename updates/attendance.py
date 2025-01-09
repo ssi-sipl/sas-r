@@ -36,7 +36,7 @@ def process_fingerprint():
         GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.LOW)
         return
 
-    fingerprint_id = finger.fingerprint_id
+    fingerprint_id = finger.finger_id
     print(f"Fingerprint ID {fingerprint_id} recognized.")
 
     data = {"fingerprint_id": srt(fingerprint_id)}
