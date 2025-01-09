@@ -59,7 +59,7 @@ def enroll_fingerprint():
     payload = {
         "first_name": first_name,
         "last_name": last_name,
-        "fingerprint_id": fingerprint_id
+        "fingerprint_id": str(fingerprint_id)
     }
     try:
         response = requests.post(ENROLL_ENDPOINT, json=payload)
