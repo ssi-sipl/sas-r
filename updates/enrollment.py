@@ -18,7 +18,21 @@ def get_new_finger_id():
             return fid
     return None
 
+
+def clear_fingerprint_buffer():
+    """
+    Clears the fingerprint sensor buffer slots.
+    """
+    if finger.empty_library() == adafruit_fingerprint.OK:
+        print("Fingerprint buffer cleared successfully.")
+    else:
+        print("Failed to clear fingerprint buffer.")
+
 def enroll_fingerprint():
+    
+    print("Clearing fingerprint buffer...")
+    clear_fingerprint_buffer()  # Clear buffer before starting a new enrollment
+
     print("Place your finger on the sensor to enroll.")
     while finger.get_image() != adafruit_fingerprint.OK:
         pass
