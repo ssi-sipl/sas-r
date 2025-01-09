@@ -24,23 +24,27 @@ uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 
-#def hash_fingerprint_template(template, unique_id):
-#    if not template or not unique_id:
-#        raise ValueError("Template and unique ID cannot be empty or None.")
-#    template_bytes = bytes(template)
-#    sha256_hash = hashlib.sha256(template_bytes + unique_id.encode()).hexdigest()
-#    return sha256_hash
+def normalize_template(template, fixed_length=512):
+    """
+    Ensures the fingerprint template is of a fixed length by padding or truncating.
+    """
+    template_bytes = bytes(template)
+    if len(template_bytes) < fixed_length:
+        # Pad with zeros if template is shorter
+        template_bytes += b'\x00' * (fixed_length - len(template_bytes))
+    elif len(template_bytes) > fixed_length:
+        # Truncate if template is longer
+        template_bytes = template_bytes[:fixed_length]
+    
+    return template_bytes
 
 
 def hash_fingerprint_template(template):
     if not template:
         raise ValueError("Template cannot be empty or None.")
-    template_bytes = bytes(template)
-    sha256_hash = hashlib.sha256(template_bytes).hexdigest()
-
-    #  print the generated hash
-    print(f"Generated SHA-256 Hash: {sha256_hash}")
     
+    normalized_template = normalize_template(template)
+    sha256_hash = hashlib.sha256(normalized_template).hexdigest()
     return sha256_hash
 
 def clear_fingerprint_buffer():
