@@ -51,6 +51,7 @@ def hash_fingerprint_template(template):
     
     normalized_template = normalize_template(template)
     sha256_hash = hashlib.sha256(normalized_template).hexdigest()
+    print(f"Generated Hash: {sha256_hash}")
     return sha256_hash
 
 
