@@ -20,7 +20,19 @@ GPIO.setup(NOT_AUTHORISED_LED_PIN, GPIO.OUT)
 uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
+def clear_fingerprint_buffer():
+    """
+    Clears the fingerprint sensor buffer slots.
+    """
+    if finger.empty_library() == adafruit_fingerprint.OK:
+        print("Fingerprint buffer cleared successfully.")
+    else:
+        print("Failed to clear fingerprint buffer.")
+
 def process_fingerprint():
+    print("Clearing fingerprint buffer...")
+    clear_fingerprint_buffer()  # Clear buffer before starting a new search
+    
     print("Waiting for fingerprint...")
     while finger.get_image() != adafruit_fingerprint.OK:
         pass
