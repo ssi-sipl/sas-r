@@ -24,13 +24,20 @@ uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 
-def hash_fingerprint_template(template, unique_id):
-    if not template or not unique_id:
-        raise ValueError("Template and unique ID cannot be empty or None.")
-    template_bytes = bytes(template)
-    sha256_hash = hashlib.sha256(template_bytes + unique_id.encode()).hexdigest()
-    return sha256_hash
+#def hash_fingerprint_template(template, unique_id):
+#    if not template or not unique_id:
+#        raise ValueError("Template and unique ID cannot be empty or None.")
+#    template_bytes = bytes(template)
+#    sha256_hash = hashlib.sha256(template_bytes + unique_id.encode()).hexdigest()
+#    return sha256_hash
 
+
+def hash_fingerprint_template(template):
+    if not template:
+        raise ValueError("Template cannot be empty or None.")
+    template_bytes = bytes(template)
+    sha256_hash = hashlib.sha256(template_bytes).hexdigest()
+    return sha256_hash  # Return only the hash
 
 def clear_fingerprint_buffer():
     """
