@@ -29,21 +29,29 @@ def clear_fingerprint_buffer():
     else:
         print("Failed to clear fingerprint buffer.")
 
-#def hash_fingerprint_template(template):
-#    if not template:
-#        raise ValueError("Template cannot be empty or None.")
-#    template_bytes = bytes(template)
-#    unique_id = str(uuid.uuid4())  # Generate a unique ID
-#    sha256_hash = hashlib.sha256(template_bytes + unique_id.encode()).hexdigest()
-#    return sha256_hash, unique_id  # Return both hash and UUID
+
+def normalize_template(template, fixed_length=512):
+    """
+    Ensures the fingerprint template is of a fixed length by padding or truncating.
+    """
+    template_bytes = bytes(template)
+    if len(template_bytes) < fixed_length:
+        # Pad with zeros if template is shorter
+        template_bytes += b'\x00' * (fixed_length - len(template_bytes))
+    elif len(template_bytes) > fixed_length:
+        # Truncate if template is longer
+        template_bytes = template_bytes[:fixed_length]
+    
+    return template_bytes
 
 
 def hash_fingerprint_template(template):
     if not template:
         raise ValueError("Template cannot be empty or None.")
-    template_bytes = bytes(template)
-    sha256_hash = hashlib.sha256(template_bytes).hexdigest()
-    return sha256_hash  # Return only the hash
+    
+    normalized_template = normalize_template(template)
+    sha256_hash = hashlib.sha256(normalized_template).hexdigest()
+    return sha256_hash
 
 
 
