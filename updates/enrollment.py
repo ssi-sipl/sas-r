@@ -63,8 +63,7 @@ def clear_fingerprint_buffer():
 
 def enroll_fingerprint():
     
-    print("Clearing fingerprint buffer...")
-    clear_fingerprint_buffer()  # Clear buffer before starting a new enrollment
+   
 
     print("Place your finger on the sensor to enroll.")
     while finger.get_image() != adafruit_fingerprint.OK:
