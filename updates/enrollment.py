@@ -15,17 +15,19 @@ def get_new_finger_id():
     """
     Get a new unique fingerprint ID for storage on the sensor.
     """
-    finger.read_templates()  # Read all stored fingerprint IDs
-    if not finger.templates:
-        return 1  # If no fingerprints are stored, start with ID 1
+    if finger.read_templates() == adafruit_fingerprint.OK:  # Read all stored fingerprint IDs
+        if not finger.templates:
+            return 1  # If no fingerprints are stored, start with ID 1
 
-    # Find the first available ID (1-127)
-    for fid in range(1, 128):
-        if fid not in finger.templates:
-            return fid
+        # Find the first available ID (1-127)
+        for fid in range(1, 128):
+            if fid not in finger.templates:
+                return fid
 
-    print("Sensor storage is full.")
-    return None
+        print("Sensor storage is full.")
+        return None
+    else:
+        print("Failed to read stored fingerprints.")
 
 def check_stored_fingerprints():
     """
