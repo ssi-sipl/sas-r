@@ -30,8 +30,8 @@ def clear_fingerprint_buffer():
         print("Failed to clear fingerprint buffer.")
 
 def process_fingerprint():
-    print("Clearing fingerprint buffer...")
-    clear_fingerprint_buffer()  # Clear buffer before starting a new search
+    # print("Clearing fingerprint buffer...")
+    # clear_fingerprint_buffer()  # Clear buffer before starting a new search
     
     print("Waiting for fingerprint...")
     while finger.get_image() != adafruit_fingerprint.OK:
