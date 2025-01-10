@@ -81,10 +81,15 @@ def enroll_fingerprint():
     if fingerprint_id is None:
         print("No available storage slots on sensor.")
         return
+    
+    print("Auto Generated Fingerprint Id:", fingerprint_id)
 
-    if finger.store_model(fingerprint_id) != adafruit_fingerprint.OK:
-        print("Failed to store fingerprint on sensor.")
+    if finger.store_model(fingerprint_id) == adafruit_fingerprint.OK:
+        print(f"Fingerprint stored successfully at ID {fingerprint_id}.")
+    else:
+        print("Failed to store fingerprint in sensor.")
         return
+
 
     print("Fingerprint Id:", fingerprint_id)
 
@@ -122,7 +127,7 @@ def main():
             break
         elif choice == "C":
             check_stored_fingerprints()
-            break
+            
         else:
             print("Invalid choice. Try again.")
 
