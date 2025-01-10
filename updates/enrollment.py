@@ -12,11 +12,15 @@ finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 ENROLL_ENDPOINT = "https://attendance-system-backend-ptbf.onrender.com/api/users/enroll"
 
 def get_new_finger_id():
-    """Get a new unique fingerprint ID for storage on the sensor."""
-    for fid in range(1, 128):  # Sensor supports up to 127 fingerprints
+    """Get a unique fingerprint ID for storage on the sensor."""
+    available_ids = set()
+    for fid in range(1, 128):
         if finger.load_model(fid) != adafruit_fingerprint.OK:
-            return fid
-    return None
+            available_ids.add(fid)
+    if not available_ids:
+        print("Sensor storage is full.")
+        return None
+    return available_ids.pop()
 
 
 def clear_fingerprint_buffer():
