@@ -75,7 +75,7 @@ def enroll_fingerprint():
         print("Failed to capture the fingerprint after 3 attempts.")
         return
 
-    template = finger.get_fpdata("char", 1)  # fingerprint template
+    template = finger.get_fpdata("raw", 1)  # fingerprint template
 
     if template is None:
         print("Failed to retrieve fingerprint template.")
