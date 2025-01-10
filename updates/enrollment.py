@@ -27,6 +27,18 @@ def get_new_finger_id():
     print("Sensor storage is full.")
     return None
 
+def check_stored_fingerprints():
+    """
+    Prints all stored fingerprint IDs.
+    """
+    print("These are the stored fingerprints:")
+    
+    if finger.read_templates() == adafruit_fingerprint.OK:
+        print("Stored fingerprint IDs:", finger.templates)
+    else:
+        print("Failed to read stored fingerprints.")
+    print("Total stored fingerprints:", len(finger.templates))
+
 
 
 def clear_fingerprint_buffer():
@@ -100,12 +112,16 @@ def enroll_fingerprint():
 def main():
     while True:
         print("Press 'E' to enroll a new fingerprint.")
+        print("Press 'C' to check stored fingerprints.")
         print("Press 'Q' to quit.")
         choice = input("Enter your choice: ").upper()
         if choice == "E":
             enroll_fingerprint()
         elif choice == "Q":
             print("Exiting program.")
+            break
+        elif choice == "C":
+            check_stored_fingerprints()
             break
         else:
             print("Invalid choice. Try again.")
