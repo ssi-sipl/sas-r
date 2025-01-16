@@ -105,14 +105,16 @@ def enroll_fingerprint():
 
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
-    if not first_name or not last_name:
-        print("First name and last name cannot be empty.")
+    employee_id = input("Enter your employee ID: ")
+    if not first_name or not last_name or not employee_id:
+        print("First name, last name, and employee ID cannot be empty.")
         return
     
 
     payload = {
         "first_name": first_name,
         "last_name": last_name,
+        "employee_id": employee_id,
         "fingerprint_id": str(fingerprint_id)
     }
     try:
