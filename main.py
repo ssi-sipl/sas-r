@@ -60,7 +60,6 @@ def disable_user():
     except Exception as e:
         logging.error(f"Error occurred during user disablement: {e}")
 
-
 def print_all_users():
     try:
         response = MANAGER.fetch_all_users()
@@ -70,7 +69,7 @@ def print_all_users():
             logging.info("=== All Users ===")
             logging.info(f"{'Employee ID':<15} {'First Name':<15} {'Last Name':<15} {'Fingerprint ID':<15} {'Disabled':<10} {'Created At':<30}")
             for user in users:
-                logging.info(f"{user["employee_id"]:<15} {user["first_name"]:<15} {user["last_name"]:<15} {user["fingerprint_id"]:<15} {user["is_disabled"]:<10} {user["created_at"]:<30}")
+                logging.info(f"{user['employee_id']:<15} {user['first_name']:<15} {user['last_name']:<15} {user['fingerprint_id']:<15} {user['is_disabled']:<10} {user['created_at']:<30}")
         else:
             logging.error(response["message"])
     except Exception as e:
@@ -89,7 +88,7 @@ def print_attendance_logs():
             logging.info("=== All Attendance Logs ===")
             logging.info(f"{'Employee ID':<15} {'First Name':<15} {'Last Name':<15} {'Entry Time':<15} {'Exit Time':<15} {'Total Hours':<15} {'is_late'} {'Created At':<30}")
             for log in logs:
-                logging.info(f"{log["employee_id"]:<15} {log["first_name"]:<15} {log["last_name"]:<15} {log["entry_time"]:<15} {log["exit_time"]:<15} {log["total_hours"]:<15} {log["is_late"]:<10} {log["created_at"]:<30}")
+                logging.info(f"{log['employee_id']:<15} {log['first_name']:<15} {log['last_name']:<15} {log['entry_time']:<15} {log['exit_time']:<15} {log['total_hours']:<15} {log['is_late']:<10} {log['created_at']:<30}")
         else:
             logging.error(response["message"])
     except Exception as e:
@@ -106,7 +105,7 @@ def print_a_user():
             user = response["data"]
             logging.info("=== User Details ===")
             logging.info(f"{'Employee ID':<15} {'First Name':<15} {'Last Name':<15} {'Fingerprint ID':<15} {'Disabled':<10} {'Created At':<30}")
-            logging.info(f"{user["employee_id"]:<15} {user["first_name"]:<15} {user["last_name"]:<15} {user["fingerprint_id"]:<15} {user["is_disabled"]:<10} {user["created_at"]:<30}")
+            logging.info(f"{user['employee_id']:<15} {user['first_name']:<15} {user['last_name']:<15} {user['fingerprint_id']:<15} {user['is_disabled']:<10} {user['created_at']:<30}")
         else:
             logging.error(response["message"])
     except Exception as e:
@@ -126,7 +125,6 @@ def delete_user():
             logging.error(response["message"])
     except Exception as e:
         logging.error(f"Error occurred during user deletion: {e}")
-
 
 def capture_fingerprint(retry_limit):
     logging.info("Place your finger on the sensor.")
