@@ -66,7 +66,7 @@ def print_all_users():
         response = MANAGER.fetch_all_users()
         if response["status"]:
             users = response["data"]
-            logging.info(f"Total users: {response["count"]}")
+            logging.info(f"Total users: {response['count']}")
             logging.info("=== All Users ===")
             logging.info(f"{'Employee ID':<15} {'First Name':<15} {'Last Name':<15} {'Fingerprint ID':<15} {'Disabled':<10} {'Created At':<30}")
             for user in users:
@@ -85,7 +85,7 @@ def print_attendance_logs():
         response = MANAGER.fetch_attendance(date)
         if response["status"]:
             logs = response["data"]
-            logging.info(f"Total logs: {response["count"]}")
+            logging.info(f"Total logs: {response['count']}")
             logging.info("=== All Attendance Logs ===")
             logging.info(f"{'Employee ID':<15} {'First Name':<15} {'Last Name':<15} {'Entry Time':<15} {'Exit Time':<15} {'Total Hours':<15} {'is_late'} {'Created At':<30}")
             for log in logs:
