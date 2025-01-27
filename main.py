@@ -27,7 +27,10 @@ def initialize_manager():
         logging.info("AttendanceSystemManager initialized successfully.")
     except Exception as e:
         logging.error(f"Failed to initialize AttendanceSystemManager: {e}")
+        logging.info("Exiting system.")
+        GPIO.cleanup()
         MANAGER = None
+        exit()
 
 def enable_user():  
     fingerprint_id = input("Enter fingerprint ID to enable: ").strip()
@@ -214,6 +217,7 @@ def listen_for_fingerprint(timeout=30):
     return None
 
 def monitor_fingerprint():
+    print("Monitoring fingerprints for Attendance...")
     try:
         while True:
             fingerprint_id = listen_for_fingerprint()
