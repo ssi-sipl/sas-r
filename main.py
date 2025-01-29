@@ -2,7 +2,7 @@ import time
 import serial
 import logging
 import adafruit_fingerprint
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from library import AttendanceSystemManager
 from config import GPIO_PINS, SERIAL_CONFIG, FINGERPRINT_RETRY_LIMIT
 
