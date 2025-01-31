@@ -3,6 +3,7 @@ import serial
 import adafruit_fingerprint
 import requests
 import RPi.GPIO as GPIO
+from library import AttendanceSystemManager
 
 # GPIO Pin Setup (Physical Board Pins)
 ACCESS_GRANTED_LED_PIN = 15  # Physical pin 15 (GPIO22)
@@ -19,6 +20,18 @@ GPIO.setup(NOT_AUTHORISED_LED_PIN, GPIO.OUT)
 # Setup serial connection for the fingerprint sensor
 uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
+
+MANAGER = None
+def initialize_manager():
+    global MANAGER
+    try:
+        MANAGER = AttendanceSystemManager()
+        print("AttendanceSystemManager initialized successfully.")
+    except Exception as e:
+        print(f"Failed to initialize AttendanceSystemManager: {e}")
+        print("Exiting system.")
+        MANAGER = None
+        exit()
 
 def clear_fingerprint_buffer():
     """
@@ -53,8 +66,9 @@ def process_fingerprint():
 
     data = {"fingerprint_id": str(fingerprint_id)}
     try:
-        response = requests.post(ATTENDANCE_ENDPOINT, json=data)
-        if response.status_code == 200:
+        response = MANAGER.handle_attendance(fingerprint_id)
+        # response = requests.post(ATTENDANCE_ENDPOINT, json=data)
+        if response["status"]:
             print("Access Granted.")
             GPIO.output(ACCESS_GRANTED_LED_PIN, GPIO.HIGH)
             time.sleep(1)

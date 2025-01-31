@@ -2,7 +2,8 @@
 import time
 import serial
 import adafruit_fingerprint
-import requests
+# import requests
+from library import AttendanceSystemManager
 
 # Setup serial connection for the fingerprint sensor
 uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
@@ -10,6 +11,19 @@ finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 # Backend API endpoint
 ENROLL_ENDPOINT = "https://attendance-system-backend-ptbf.onrender.com/api/users/enroll"
+
+MANAGER = None
+
+def initialize_manager():
+    global MANAGER
+    try:
+        MANAGER = AttendanceSystemManager()
+        print("AttendanceSystemManager initialized successfully.")
+    except Exception as e:
+        print(f"Failed to initialize AttendanceSystemManager: {e}")
+        print("Exiting system.")
+        MANAGER = None
+        exit()
 
 def get_new_finger_id():
     """
@@ -118,12 +132,15 @@ def enroll_fingerprint():
         "fingerprint_id": str(fingerprint_id)
     }
     try:
-        response = requests.post(ENROLL_ENDPOINT, json=payload)
-        if response.status_code == 200:
-            print("Enrollment successful.")
+        response = MANAGER.enroll_new_user(first_name, last_name, fingerprint_id, employee_id)
+        # response = requests.post(ENROLL_ENDPOINT, json=payload)
+        if response["status"]:
+            print(f"Enrollment successful: {response['message']}")
         else:
-            print("Enrollment failed:", response.text)
-    except requests.RequestException as e:
+            print(f"Enrollment failed: {response['message']}")
+            print("Enrollment successful.")
+        
+    except Exception as e:
         print(f"Error enrolling fingerprint: {e}")
 
 def main():
@@ -144,4 +161,5 @@ def main():
             print("Invalid choice. Try again.")
 
 if __name__ == "__main__":
+    initialize_manager()
     main()
