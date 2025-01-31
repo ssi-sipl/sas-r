@@ -130,8 +130,8 @@ def delete_user():
 def capture_fingerprint(retry_limit):
     logging.info("Place your finger on the sensor.")
     for attempt in range(retry_limit):
-        if finger.gen_img() == adafruit_fingerprint.FINGERPRINT_OK:
-            if finger.img_2Tz(1) == adafruit_fingerprint.FINGERPRINT_OK:
+        if finger.gen_img() == 0:
+            if finger.img_2Tz(1) == 0:
                 logging.info("Fingerprint captured and converted.")
                 return True
             logging.warning("Failed to convert image to template.")
@@ -142,7 +142,7 @@ def capture_fingerprint(retry_limit):
 
 def get_new_finger_id():
     try:
-        if finger.read_templates() == adafruit_fingerprint.FINGERPRINT_OK:
+        if finger.read_templates() == 0:
             logging.info("Reading stored fingerprints...")
             logging.info(f"Stored fingerprint IDs: {finger.templates}")
 
@@ -170,7 +170,7 @@ def enroll_fingerprint():
         if not capture_fingerprint(FINGERPRINT_RETRY_LIMIT):
             return
 
-        if finger.create_model() != adafruit_fingerprint.FINGERPRINT_OK:
+        if finger.create_model() != 0:
             logging.error("Failed to create fingerprint model.")
             return
 
@@ -181,7 +181,7 @@ def enroll_fingerprint():
 
         logging.info(f"Auto Generated Fingerprint ID: {fingerprint_id}")
 
-        if finger.store_model(fingerprint_id) == adafruit_fingerprint.FINGERPRINT_OK:
+        if finger.store_model(fingerprint_id) == 0:
             logging.info(f"Fingerprint stored successfully at ID {fingerprint_id}.")
         else:
             logging.error("Failed to store fingerprint in sensor.")
@@ -211,7 +211,7 @@ def listen_for_fingerprint(timeout=30):
     start_time = time.time()
     while time.time() - start_time < timeout:
         if capture_fingerprint(FINGERPRINT_RETRY_LIMIT):
-            if finger.finger_search() == adafruit_fingerprint.FINGERPRINT_OK:
+            if finger.finger_search() == 0:
                 fingerprint_id = finger.finger_id
                 logging.info(f"Fingerprint ID {fingerprint_id} recognized.")
                 return fingerprint_id
