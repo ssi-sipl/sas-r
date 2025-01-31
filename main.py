@@ -16,7 +16,8 @@ GPIO.setup(GPIO_PINS["NOT_AUTHORISED_LED"], GPIO.OUT)
 
 # Initialize serial connection for fingerprint sensor
 uart = serial.Serial(SERIAL_CONFIG["port"], baudrate=SERIAL_CONFIG["baudrate"], timeout=SERIAL_CONFIG["timeout"])
-finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
+finger = adafruit_fingerprint.AdafruitFingerprint(uart)
+
 
 MANAGER = None
 
