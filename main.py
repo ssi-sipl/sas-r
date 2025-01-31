@@ -160,48 +160,51 @@ def get_new_finger_id():
     return None
 
 def enroll_fingerprint():
-    if not capture_fingerprint(FINGERPRINT_RETRY_LIMIT):
-        return
-
-    logging.info("Remove finger and place it again.")
-    time.sleep(2)
-
-    if not capture_fingerprint(FINGERPRINT_RETRY_LIMIT):
-        return
-
-    if finger.create_model() != adafruit_fingerprint.OK:
-        logging.error("Failed to create fingerprint model.")
-        return
-
-    fingerprint_id = get_new_finger_id()
-    if fingerprint_id is None:
-        logging.error("No available storage slots on sensor.")
-        return
-
-    logging.info(f"Auto Generated Fingerprint ID: {fingerprint_id}")
-
-    if finger.store_model(fingerprint_id) == adafruit_fingerprint.OK:
-        logging.info(f"Fingerprint stored successfully at ID {fingerprint_id}.")
-    else:
-        logging.error("Failed to store fingerprint in sensor.")
-        return
-
-    # Enroll user in the system
-    first_name = input("Enter your first name: ").strip()
-    last_name = input("Enter your last name: ").strip()
-    employee_id = input("Enter your employee ID: ").strip()
-    if not first_name or not last_name or not employee_id:
-        logging.error("First name, last name, and employee ID cannot be empty.")
-        return
-
     try:
-        response = MANAGER.enroll_new_user(first_name, last_name, fingerprint_id, employee_id)
-        if response["status"]:
-            logging.info(f"Enrollment successful: {response['message']}")
+        if not capture_fingerprint(FINGERPRINT_RETRY_LIMIT):
+            return
+
+        logging.info("Remove finger and place it again.")
+        time.sleep(2)
+
+        if not capture_fingerprint(FINGERPRINT_RETRY_LIMIT):
+            return
+
+        if finger.create_model() != adafruit_fingerprint.OK:
+            logging.error("Failed to create fingerprint model.")
+            return
+
+        fingerprint_id = get_new_finger_id()
+        if fingerprint_id is None:
+            logging.error("No available storage slots on sensor.")
+            return
+
+        logging.info(f"Auto Generated Fingerprint ID: {fingerprint_id}")
+
+        if finger.store_model(fingerprint_id) == adafruit_fingerprint.OK:
+            logging.info(f"Fingerprint stored successfully at ID {fingerprint_id}.")
         else:
-            logging.error(f"Enrollment failed: {response['message']}")
+            logging.error("Failed to store fingerprint in sensor.")
+            return
+
+        # Enroll user in the system
+        first_name = input("Enter your first name: ").strip()
+        last_name = input("Enter your last name: ").strip()
+        employee_id = input("Enter your employee ID: ").strip()
+        if not first_name or not last_name or not employee_id:
+            logging.error("First name, last name, and employee ID cannot be empty.")
+            return
+
+        try:
+            response = MANAGER.enroll_new_user(first_name, last_name, fingerprint_id, employee_id)
+            if response["status"]:
+                logging.info(f"Enrollment successful: {response['message']}")
+            else:
+                logging.error(f"Enrollment failed: {response['message']}")
+        except Exception as e:
+            logging.error(f"Error occurred during enrollment: {e}")
     except Exception as e:
-        logging.error(f"Error occurred during enrollment: {e}")
+        logging.error(f"Error occurred in enroll_fingerprint: {e}")
 
 def listen_for_fingerprint(timeout=30):
     logging.info("Waiting for fingerprint...")
