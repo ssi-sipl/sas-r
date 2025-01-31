@@ -1,6 +1,5 @@
 import time
-import serial.tools.list_ports
-from serial import Serial
+import serial
 import logging
 import adafruit_fingerprint
 import RPi.GPIO as GPIO
@@ -16,7 +15,7 @@ GPIO.setup(GPIO_PINS["ACCESS_GRANTED_LED"], GPIO.OUT)
 GPIO.setup(GPIO_PINS["NOT_AUTHORISED_LED"], GPIO.OUT)
 
 # Initialize serial connection for fingerprint sensor
-uart = Serial(SERIAL_CONFIG["port"], baudrate=SERIAL_CONFIG["baudrate"], timeout=SERIAL_CONFIG["timeout"])
+uart = serial.Serial(SERIAL_CONFIG["port"], baudrate=SERIAL_CONFIG["baudrate"], timeout=SERIAL_CONFIG["timeout"])
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 MANAGER = None
