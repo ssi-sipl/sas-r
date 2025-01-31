@@ -131,7 +131,7 @@ def capture_fingerprint(retry_limit):
     logging.info("Place your finger on the sensor.")
     for attempt in range(retry_limit):
         if finger.gen_img() == adafruit_fingerprint.OK:
-            if finger.image_2_tz(1) == adafruit_fingerprint.OK:
+            if finger.img_2Tz(1) == adafruit_fingerprint.OK:
                 logging.info("Fingerprint captured and converted.")
                 return True
             logging.warning("Failed to convert image to template.")

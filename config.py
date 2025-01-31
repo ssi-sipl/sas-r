@@ -4,7 +4,7 @@ GPIO_PINS = {
 }
 
 SERIAL_CONFIG = {
-    "port": "/dev/ttyS0",
+    "port": "/dev/serial0",
     "baudrate": 57600,
     "timeout": 1
 }
