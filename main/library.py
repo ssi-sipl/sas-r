@@ -3,7 +3,7 @@ import os
 from datetime import datetime, timedelta
 
 class AttendanceSystemManager:
-    def __init__(self, user_csv="users.csv", attendance_dir="attendance_logs"):
+    def __init__(self, user_csv="../data/users.csv", attendance_dir="../data/attendance_logs"):
         # File and directory paths
         self.user_csv = user_csv
         self.attendance_dir = attendance_dir
@@ -297,10 +297,10 @@ class AttendanceSystemManager:
 # Example Usage
 if __name__ == "__main__":
     pass
-    # manager = AttendanceSystemManager()
+    manager = AttendanceSystemManager()
 
     # Enroll a new user
-    # print(manager.enroll_new_user("John", "Doe", "12345", "001"))
+    print(manager.enroll_new_user("John", "Doe", "12345", "001"))
 
     # # Fetch all users
     # print(manager.fetch_all_users())
@@ -309,7 +309,7 @@ if __name__ == "__main__":
     # print(manager.fetch_user("12345"))
 
     # # Handle attendance (entry)
-    # print(manager.handle_attendance("12345"))
+    print(manager.handle_attendance("12345"))
 
     # # Handle attendance (exit)
     # print(manager.handle_attendance("12345"))

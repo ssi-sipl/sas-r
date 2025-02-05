@@ -7,3 +7,9 @@ users.csv
 __pycache__
 
 .vscode
+
+Attendance Sync/credentials.json
+
+data
+
+Attendance Sync/synced_files.txt
