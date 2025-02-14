@@ -45,20 +45,17 @@ def clear_fingerprint_buffer():
 def get_image_with_retry(max_retries=3):
     print("Waiting for finger placement...")
     
-    # First wait for finger to be placed
-    while finger.get_finger_status() == adafruit_fingerprint.NO_FINGER:
-        time.sleep(0.1)
-        continue
-    
-    print("Finger detected! Processing...")
-    time.sleep(0.2)  # Small delay to ensure finger is well placed
-    
-    # Now try to get the image
+    # Try to get the image
     for attempt in range(max_retries):
         get_image_result = finger.get_image()
         if get_image_result == adafruit_fingerprint.OK:
+            print("Finger detected! Processing...")
             return True
-        if get_image_result == 2:  # PACKETRECIEVEERR
+        elif get_image_result == adafruit_fingerprint.NOFINGER:
+            # No finger detected, wait a bit and continue
+            time.sleep(0.1)
+            continue
+        elif get_image_result == 2:  # PACKETRECIEVEERR
             print(f"Communication error (attempt {attempt + 1}/{max_retries})")
             time.sleep(0.5)  # Wait before retry
         else:
@@ -75,13 +72,6 @@ def process_fingerprint():
     
     print("Image taken successfully")
     
-    # Wait for finger to be removed
-    print("Please remove finger from sensor...")
-    while finger.get_finger_status() != adafruit_fingerprint.NO_FINGER:
-        time.sleep(0.1)
-        continue
-    print("Finger removed")
-
     # First template conversion
     print("Converting image to template (slot 1)...")
     convert_result = finger.image_2_tz(1)
