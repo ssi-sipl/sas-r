@@ -86,6 +86,7 @@ def process_fingerprint():
 
 def monitor_fingerprint():
     try:
+        initialize_manager()
         while True:
             process_fingerprint()
             time.sleep(2)
