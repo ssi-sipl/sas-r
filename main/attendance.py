@@ -93,65 +93,66 @@ def process_fingerprint():
     # Add a small delay after successful detection
     time.sleep(0.2)
     
-    print("Image taken successfully")
+    # print("Image taken successfully")
     
     # First template conversion
-    print("Converting image to template (slot 1)...")
+    # print("Converting image to template (slot 1)...")
     convert_result = finger.image_2_tz(1)
     if convert_result != adafruit_fingerprint.OK:
         print(f"Failed to convert image to template. Error code: {convert_result}")
-        print("Possible issues:")
-        print("1. Finger might be too dry or wet")
-        print("2. Finger placement might be incorrect")
-        print("3. Sensor might be dirty")
-        print("Please try again with a clean, well-placed finger")
+        # print("Possible issues:")
+        # print("1. Finger might be too dry or wet")
+        # print("2. Finger placement might be incorrect")
+        # print("3. Sensor might be dirty")
+        # print("Please try again with a clean, well-placed finger")
         return
 
-    print("Template conversion successful")
-    print("Searching for matching fingerprint...")
+    # print("Template conversion successful")
+    # print("Searching for matching fingerprint...")
     
     # Search for the fingerprint
     search_result = finger.finger_search()
     if search_result != adafruit_fingerprint.OK:
         print(f"Fingerprint not found in database. Error code: {search_result}")
-        print("Turning on NOT_AUTHORIZED LED...")
+        # print("Turning on NOT_AUTHORIZED LED...")
         GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.HIGH)
         time.sleep(1)
         GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.LOW)
-        print("LED turned off")
+        # print("LED turned off")
         return
 
     fingerprint_id = finger.finger_id
     confidence = finger.confidence
     print(f"Fingerprint ID {fingerprint_id} recognized successfully!")
-    print(f"Match confidence: {confidence}")
+    # print(f"Match confidence: {confidence}")
 
     data = {"fingerprint_id": str(fingerprint_id)}
     try:
-        print(f"Sending attendance request for fingerprint ID {fingerprint_id}...")
+        # print(f"Sending attendance request for fingerprint ID {fingerprint_id}...")
         response = MANAGER.handle_attendance(fingerprint_id)
         
         if response["status"]:
-            print("Access Granted - Attendance logged successfully!")
-            print("Turning on ACCESS_GRANTED LED...")
+            # print("Access Granted - Attendance logged successfully!")
+            print(response.get('message', 'Unknown error'))
+            # print("Turning on ACCESS_GRANTED LED...")
             GPIO.output(ACCESS_GRANTED_LED_PIN, GPIO.HIGH)
             time.sleep(1)
             GPIO.output(ACCESS_GRANTED_LED_PIN, GPIO.LOW)
-            print("LED turned off")
+            # print("LED turned off")
         else:
-            print(f"Access Denied: {response.get('message', 'Unknown error')}")
-            print("Turning on NOT_AUTHORIZED LED...")
+            print(response.get('message', 'Unknown error'))
+            # print("Turning on NOT_AUTHORIZED LED...")
             GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.HIGH)
             time.sleep(1)
             GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.LOW)
-            print("LED turned off")
+            # print("LED turned off")
     except requests.RequestException as e:
         print(f"Error logging attendance: {e}")
-        print("Turning on NOT_AUTHORIZED LED due to error...")
+        # print("Turning on NOT_AUTHORIZED LED due to error...")
         GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.HIGH)
         time.sleep(1)
         GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.LOW)
-        print("LED turned off")
+        # print("LED turned off")
     print("=== Fingerprint processing complete ===\n")
 
 def monitor_fingerprint():
@@ -162,7 +163,7 @@ def monitor_fingerprint():
         
         while True:
             process_fingerprint()
-            print("\nWaiting for next scan (2 seconds)...")
+            print("\nNext scan in 2 seconds...")
             time.sleep(2)  # Longer delay between scans
             
     except KeyboardInterrupt:
