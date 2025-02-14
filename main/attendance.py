@@ -43,6 +43,17 @@ def clear_fingerprint_buffer():
         print("Failed to clear fingerprint buffer.")
 
 def get_image_with_retry(max_retries=3):
+    print("Waiting for finger placement...")
+    
+    # First wait for finger to be placed
+    while finger.get_finger_status() == adafruit_fingerprint.NO_FINGER:
+        time.sleep(0.1)
+        continue
+    
+    print("Finger detected! Processing...")
+    time.sleep(0.2)  # Small delay to ensure finger is well placed
+    
+    # Now try to get the image
     for attempt in range(max_retries):
         get_image_result = finger.get_image()
         if get_image_result == adafruit_fingerprint.OK:
@@ -57,13 +68,19 @@ def get_image_with_retry(max_retries=3):
 
 def process_fingerprint():
     print("\n=== Starting fingerprint processing ===")
-    print("Waiting for finger placement...")
     
     # Try to get the image with retries
     if not get_image_with_retry():
         return
     
     print("Image taken successfully")
+    
+    # Wait for finger to be removed
+    print("Please remove finger from sensor...")
+    while finger.get_finger_status() != adafruit_fingerprint.NO_FINGER:
+        time.sleep(0.1)
+        continue
+    print("Finger removed")
 
     # First template conversion
     print("Converting image to template (slot 1)...")
@@ -129,10 +146,11 @@ def monitor_fingerprint():
         initialize_manager()
         print("System initialized successfully")
         print("Place finger on sensor to scan...")
+        
         while True:
             process_fingerprint()
-            print("Waiting for next scan...")
-            time.sleep(1)  # Reduced from 2 seconds to 1 second
+            time.sleep(0.1)  # Small delay to prevent CPU overload
+            
     except KeyboardInterrupt:
         print("\nKeyboard interrupt detected")
         print("Exiting program. Cleaning up GPIO...")
