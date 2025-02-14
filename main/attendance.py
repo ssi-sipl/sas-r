@@ -46,29 +46,52 @@ def get_image_with_retry(max_retries=3):
     print("Waiting for finger placement...")
     
     # Try to get the image
-    for attempt in range(max_retries):
+    consecutive_detections = 0  # Counter for consistent finger detections
+    
+    while True:
         get_image_result = finger.get_image()
-        if get_image_result == adafruit_fingerprint.OK:
-            print("Finger detected! Processing...")
-            return True
-        elif get_image_result == adafruit_fingerprint.NOFINGER:
-            # No finger detected, wait a bit and continue
+        
+        if get_image_result == adafruit_fingerprint.NOFINGER:
+            consecutive_detections = 0  # Reset counter when no finger detected
             time.sleep(0.1)
             continue
+            
+        elif get_image_result == adafruit_fingerprint.OK:
+            consecutive_detections += 1
+            if consecutive_detections >= 3:  # Require 3 consecutive successful readings
+                print("Finger detected! Processing...")
+                return True
+            time.sleep(0.1)  # Small delay between readings
+            continue
+            
         elif get_image_result == 2:  # PACKETRECIEVEERR
-            print(f"Communication error (attempt {attempt + 1}/{max_retries})")
+            print(f"Communication error")
             time.sleep(0.5)  # Wait before retry
+            consecutive_detections = 0
+            
         else:
             print(f"Failed to get image. Error code: {get_image_result}")
             return False
+            
+        # Check if we've exceeded max retries for errors
+        if consecutive_detections == 0:  # Only count failed attempts when no finger detected
+            max_retries -= 1
+            if max_retries <= 0:
+                print("Max retries exceeded. Please try again.")
+                return False
+    
     return False
 
 def process_fingerprint():
     print("\n=== Starting fingerprint processing ===")
+    print("Please place your finger on the sensor...")
     
     # Try to get the image with retries
     if not get_image_with_retry():
         return
+    
+    # Add a small delay after successful detection
+    time.sleep(0.2)
     
     print("Image taken successfully")
     
@@ -139,7 +162,8 @@ def monitor_fingerprint():
         
         while True:
             process_fingerprint()
-            time.sleep(0.1)  # Small delay to prevent CPU overload
+            print("\nWaiting for next scan (2 seconds)...")
+            time.sleep(2)  # Longer delay between scans
             
     except KeyboardInterrupt:
         print("\nKeyboard interrupt detected")
