@@ -18,7 +18,7 @@ GPIO.setup(ACCESS_GRANTED_LED_PIN, GPIO.OUT)
 GPIO.setup(NOT_AUTHORISED_LED_PIN, GPIO.OUT)
 
 # Setup serial connection for the fingerprint sensor
-uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
+uart = serial.Serial("/dev/serial0", baudrate=57600, timeout=1)
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
 MANAGER = None
