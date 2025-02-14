@@ -42,14 +42,40 @@ def clear_fingerprint_buffer():
     else:
         print("Failed to clear fingerprint buffer.")
 
+def get_image_with_retry(max_retries=3):
+    for attempt in range(max_retries):
+        get_image_result = finger.get_image()
+        if get_image_result == adafruit_fingerprint.OK:
+            return True
+        if get_image_result == 2:  # PACKETRECIEVEERR
+            print(f"Communication error (attempt {attempt + 1}/{max_retries})")
+            time.sleep(0.5)  # Wait before retry
+        else:
+            print(f"Failed to get image. Error code: {get_image_result}")
+            return False
+    return False
+
 def process_fingerprint():
     print("\n=== Starting fingerprint processing ===")
     print("Waiting for finger placement...")
     
+    if not get_image_with_retry():
+        return
+        
     # Get the image
     get_image_result = finger.get_image()
     if get_image_result != adafruit_fingerprint.OK:
-        print(f"Failed to get image. Error code: {get_image_result}")
+        if get_image_result == 2:  # PACKETRECIEVEERR
+            print("Error: Failed to communicate with sensor (Error code 2)")
+            print("Troubleshooting steps:")
+            print("1. Check physical connections (TX/RX wires)")
+            print("2. Verify power supply is stable")
+            print("3. Ensure serial port is properly configured")
+            print("4. Try resetting the sensor")
+            # Add a small delay before retry
+            time.sleep(0.5)
+        else:
+            print(f"Failed to get image. Error code: {get_image_result}")
         return
     print("Image taken successfully")
 
