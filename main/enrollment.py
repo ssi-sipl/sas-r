@@ -6,7 +6,7 @@ import adafruit_fingerprint
 from library import AttendanceSystemManager
 
 # Setup serial connection for the fingerprint sensor
-uart = serial.Serial("/dev/ttyAMA0", baudrate=57600, timeout=1)
+uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
 time.sleep(2)
 finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
 
