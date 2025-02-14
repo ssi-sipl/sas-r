@@ -7,7 +7,7 @@ from library import AttendanceSystemManager
 
 # Setup serial connection for the fingerprint sensor
 uart = serial.Serial(
-    port="/dev/ttyS0",  # or try /dev/ttyS0 if this doesn't work
+    port="/dev/serial0",  # or try /dev/ttyS0 if this doesn't work
     baudrate=57600,
     timeout=1,
     write_timeout=1
