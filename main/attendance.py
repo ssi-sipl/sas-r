@@ -59,24 +59,10 @@ def process_fingerprint():
     print("\n=== Starting fingerprint processing ===")
     print("Waiting for finger placement...")
     
+    # Try to get the image with retries
     if not get_image_with_retry():
         return
-        
-    # Get the image
-    get_image_result = finger.get_image()
-    if get_image_result != adafruit_fingerprint.OK:
-        if get_image_result == 2:  # PACKETRECIEVEERR
-            print("Error: Failed to communicate with sensor (Error code 2)")
-            print("Troubleshooting steps:")
-            print("1. Check physical connections (TX/RX wires)")
-            print("2. Verify power supply is stable")
-            print("3. Ensure serial port is properly configured")
-            print("4. Try resetting the sensor")
-            # Add a small delay before retry
-            time.sleep(0.5)
-        else:
-            print(f"Failed to get image. Error code: {get_image_result}")
-        return
+    
     print("Image taken successfully")
 
     # First template conversion
@@ -141,12 +127,17 @@ def process_fingerprint():
 def monitor_fingerprint():
     try:
         initialize_manager()
+        print("System initialized successfully")
+        print("Place finger on sensor to scan...")
         while True:
             process_fingerprint()
-            time.sleep(2)
+            print("Waiting for next scan...")
+            time.sleep(1)  # Reduced from 2 seconds to 1 second
     except KeyboardInterrupt:
+        print("\nKeyboard interrupt detected")
         print("Exiting program. Cleaning up GPIO...")
         GPIO.cleanup()
+        print("Cleanup complete")
 
 if __name__ == "__main__":
     print("System ready. Monitoring fingerprint sensor...")
