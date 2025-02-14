@@ -6,9 +6,28 @@ import adafruit_fingerprint
 from library import AttendanceSystemManager
 
 # Setup serial connection for the fingerprint sensor
-uart = serial.Serial("/dev/ttyS0", baudrate=57600, timeout=1)
-time.sleep(2)
-finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
+uart = serial.Serial(
+    port="/dev/ttyS0",  # or try /dev/ttyS0 if this doesn't work
+    baudrate=57600,
+    timeout=1,
+    write_timeout=1
+)
+
+print("Serial port opened successfully")
+time.sleep(2)  # Give the sensor time to power up
+
+try:
+    print("Attempting to initialize fingerprint sensor...")
+    finger = adafruit_fingerprint.Adafruit_Fingerprint(uart)
+    print("Fingerprint sensor initialized successfully")
+except Exception as e:
+    print(f"Failed to initialize fingerprint sensor: {str(e)}")
+    print("Please check:")
+    print("1. Physical connections (TX/RX, power)")
+    print("2. Serial port configuration")
+    print("3. Sensor power (LED should be on)")
+    uart.close()
+    exit(1)
 
 # Backend API endpoint
 ENROLL_ENDPOINT = "https://attendance-system-backend-ptbf.onrender.com/api/users/enroll"
