@@ -4,6 +4,7 @@ import adafruit_fingerprint
 import requests
 import RPi.GPIO as GPIO
 from library import AttendanceSystemManager
+import atexit
 
 # GPIO Pin Setup (Physical Board Pins)
 ACCESS_GRANTED_LED_PIN = 15  # Physical pin 15 (GPIO22)
@@ -11,6 +12,10 @@ NOT_AUTHORISED_LED_PIN = 16  # Physical pin 16 (GPIO23)
 
 # Backend API Configuration
 # ATTENDANCE_ENDPOINT = "https://attendance-system-backend-ptbf.onrender.com/api/logs/attendance"
+atexit.register(GPIO.cleanup)
+
+# Disable GPIO warnings
+GPIO.setwarnings(False)
 
 # Setup GPIO mode and pin configuration
 GPIO.setmode(GPIO.BOARD)
