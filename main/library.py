@@ -5,8 +5,10 @@ from datetime import datetime, timedelta
 class AttendanceSystemManager:
     def __init__(self, user_csv="../data/users.csv", attendance_dir="../data/attendance_logs"):
         # File and directory paths
-        self.user_csv = user_csv
-        self.attendance_dir = attendance_dir
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        self.user_csv = os.path.join(script_dir, user_csv)
+        self.attendance_dir = os.path.join(script_dir, attendance_dir)
         
         # Columns for the user DataFrame
         self.user_headers = ["employee_id", "first_name", "last_name", "fingerprint_id", "is_disabled", "created_at"]
