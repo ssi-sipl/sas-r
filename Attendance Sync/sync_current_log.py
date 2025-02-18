@@ -26,6 +26,16 @@ attendance_file = os.path.join(ATTENDANCE_FOLDER, f"{current_date}.csv")
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILE, scope)
 client = gspread.authorize(creds)
+def clean_dataframe(df):
+    # Handle missing values (NaN, empty strings) by replacing them with None
+    df = df.applymap(lambda x: None if isinstance(x, str) and x.strip() == '' else x)
+    
+    # Handle time columns: Make sure they are in string format, replace invalid time if necessary
+    time_columns = ['entry_time', 'exit_time', 'total_time']
+    for col in time_columns:
+        df[col] = df[col].apply(lambda x: str(x) if pd.notnull(x) else None)
+        
+    return df
 
 def sync_current_log():
     try:
@@ -34,6 +44,8 @@ def sync_current_log():
         
         date = current_date
         df = pd.read_csv(attendance_file)
+
+        df = clean_dataframe(df)
                 
         try:
             worksheet = sheet.worksheet(date)  # Try to find existing sheet

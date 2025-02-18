@@ -42,6 +42,16 @@ def get_synced_files():
             return set(f.read().splitlines())
     return set()
 
+def clean_dataframe(df):
+    # Handle missing values (NaN, empty strings) by replacing them with None
+    df = df.applymap(lambda x: None if isinstance(x, str) and x.strip() == '' else x)
+    
+    # Ensure the 'created_at' column is formatted as string
+    if 'created_at' in df.columns:
+        df['created_at'] = pd.to_datetime(df['created_at'], errors='coerce').dt.strftime('%a, %b %d, %Y %I:%M:%S %p')
+    
+    return df
+
 # Function to update Daily Attendance Logs
 def update_attendance_logs():
     try:
