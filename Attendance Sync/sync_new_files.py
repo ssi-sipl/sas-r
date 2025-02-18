@@ -52,6 +52,10 @@ def clean_dataframe(df):
     
     return df
 
+def convert_all_to_string(df):
+    # Convert all values in the DataFrame to strings
+    return df.apply(lambda col: col.map(str))
+
 # Function to update Daily Attendance Logs
 def update_attendance_logs():
     try:
@@ -62,7 +66,7 @@ def update_attendance_logs():
             if filename.endswith(".csv") and filename not in synced_files:
                 date = filename.replace(".csv", "")  # Extract date from filename
                 df = pd.read_csv(os.path.join(ATTENDANCE_FOLDER, filename))
-                
+                df = convert_all_to_string(df)
                 try:
                     worksheet = sheet.worksheet(date)  # Try to find existing sheet
                 except gspread.exceptions.WorksheetNotFound:

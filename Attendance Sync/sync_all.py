@@ -22,10 +22,15 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILE, scope)
 client = gspread.authorize(creds)
 
+def convert_all_to_string(df):
+    # Convert all values in the DataFrame to strings
+    return df.apply(lambda col: col.map(str))
+
 # Function to update Employee Data
 def update_users_sheet():
     try:
         df = pd.read_csv(USERS_CSV)
+        df = convert_all_to_string(df)
         sheet = client.open(EMPLOYEE_SHEET_NAME).sheet1  # First sheet
         sheet.clear()  # Clear existing dataPARENT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))  # Move one level up
         sheet.append_rows([df.columns.tolist()] + df.values.tolist())  # Append new data
@@ -42,7 +47,7 @@ def update_attendance_logs():
             if filename.endswith(".csv"):
                 date = filename.replace(".csv", "")  # Extract date from filename
                 df = pd.read_csv(os.path.join(ATTENDANCE_FOLDER, filename))
-                
+                df = convert_all_to_string(df)
                 try:
                     worksheet = sheet.worksheet(date)  # Try to find existing sheet
                 except gspread.exceptions.WorksheetNotFound:
