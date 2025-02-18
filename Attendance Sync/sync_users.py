@@ -33,11 +33,16 @@ def clean_dataframe(df):
     
     return df
 
+
+def convert_all_to_string(df):
+    # Convert all values in the DataFrame to strings
+    return df.applymap(str)
+
 # Function to update Employee Data
 def sync_users():
     try:
         df = pd.read_csv(USERS_CSV)
-        df = clean_dataframe(df)
+        df = convert_all_to_string(df)
         sheet = client.open(EMPLOYEE_SHEET_NAME).sheet1  # First sheet
         sheet.clear()  # Clear existing dataPARENT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))  # Move one level up
         sheet.append_rows([df.columns.tolist()] + df.values.tolist())  # Append new data

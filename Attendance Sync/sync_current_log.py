@@ -37,6 +37,11 @@ def clean_dataframe(df):
         
     return df
 
+
+def convert_all_to_string(df):
+    # Convert all values in the DataFrame to strings
+    return df.applymap(str)
+
 def sync_current_log():
     try:
         sheet = client.open(ATTENDANCE_SHEET_NAME)
@@ -45,7 +50,7 @@ def sync_current_log():
         date = current_date
         df = pd.read_csv(attendance_file)
 
-        df = clean_dataframe(df)
+        df = convert_all_to_string(df)
                 
         try:
             worksheet = sheet.worksheet(date)  # Try to find existing sheet
