@@ -36,7 +36,7 @@ def clean_dataframe(df):
 
 def convert_all_to_string(df):
     # Convert all values in the DataFrame to strings
-    return df.applymap(str)
+    return df.apply(lambda col: col.map(str))
 
 # Function to update Employee Data
 def sync_users():
