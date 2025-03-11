@@ -88,7 +88,7 @@ def get_image_with_retry(max_retries=3):
     return False
 
 def process_fingerprint():
-    clear_fingerprint_buffer()
+    
     print("\n=== Starting fingerprint processing ===")
     print("Please place your finger on the sensor...")
     
