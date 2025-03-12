@@ -4,7 +4,7 @@
 for i in {1..12}; do
     if ping -c 1 google.com &> /dev/null; then
         echo "Internet is available. Running sync_users.py..."
-        /home/rudra/virtual_env/bin/python /home/rudra/maverick/new/sas-r/Attendance\ Sync/sync_users.py
+        /home/rudra/virtual_env/bin/python /home/rudra/sas-r/Attendance\ Sync/sync_users.py
         exit 0
     fi
     echo "Waiting for internet..."
