@@ -163,6 +163,13 @@ def process_fingerprint():
 
 def monitor_fingerprint():
     try:
+        GPIO.output(ACCESS_GRANTED_LED_PIN, GPIO.HIGH)
+        time.sleep(1)
+        GPIO.output(ACCESS_GRANTED_LED_PIN, GPIO.LOW)
+        time.sleep(2)
+        GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.HIGH)
+        time.sleep(1)
+        GPIO.output(NOT_AUTHORISED_LED_PIN, GPIO.LOW)
         initialize_manager()
         print("System initialized successfully")
         print("Place finger on sensor to scan...")
